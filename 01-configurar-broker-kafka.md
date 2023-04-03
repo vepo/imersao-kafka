@@ -1,6 +1,6 @@
 # 1. Como configurar um Broker Apache Kafka
 
-[Voltar](./README.md) [Próximo](./01-configurar-broker-kafka.md)
+[Voltar](./README.md) [Próximo](./02-criando-um-produtor.md)
 
 ## Objetivo
 
@@ -171,4 +171,4 @@ Todas as propriedades aceitas pelo pelo broker estão definidas na [documentaç�
 * default.replication.factor
 * offsets.retention
 
-[Voltar](./README.md) [Próximo](./01-configurar-broker-kafka.md)
+[Voltar](./README.md) [Próximo](./02-criando-um-produtor.md)
