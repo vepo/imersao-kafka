@@ -11,10 +11,12 @@ O objetivo desse material é ser um curso sobre [Apache Kafka](https://kafka.apa
 * Docker
 * Descompactador tar (no Windows [7-Zip](https://7-zip.org/download.html))
 
+Para instalar o Java e o Maven, recomendo usar o [SDKMan!](https://sdkman.io/install). Com essa ferramenta é fácil alterar a versão do Java mudar variáveis de ambiente e instalar várias ferramentas.
+
 ## Roteiro
 
 1. [Como configurar um Broker Apache Kafka](./01-configurar-broker-kafka.md)
-2. Como criar um Produtor de Mensagens
+2. [Como criar um Produtor de Mensagens](./02-criando-um-produtor.md)
 3. Como criar um Consumidor de Mensagens
 4. Como criar um Stream
 5. Como configurar um Cluster Kafka
