@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import org.apache.kafka.common.serialization.Serializer;
 
-public class GeolocationSerializar implements Serializer<Geolocation> {
+public class GeolocationSerializer implements Serializer<Geolocation> {
 
     @Override
     public byte[] serialize(String topic, Geolocation data) {
