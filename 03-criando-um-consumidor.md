@@ -343,6 +343,7 @@ Vamos falar de como o cluster de consumidores se comporta, para isso defini 3 op
 1. Informando o estado do Cluster (_Heartbeat_/_Session_)
 2. Redistribuindo Carga (Operação de Rebalanceamento)
 3. Controlando posição de leitura (_Commit_/_Offset_/_Assignment_)
+4. Definindo o nível de isolamento
 
 Cada cluster de consumidores tem um líder que coordenará essas operações, elas não são responsabilidade do Broker.
 
@@ -396,12 +397,24 @@ try {
         }
     }
 } finally {
-consumer.close();
+    consumer.close();
 }
 ```
 
 Por fim fica uma última pergunta: _para agilizar, posso processar usando várias threads?_
 
 A resposta é SIM e NÃO! Nunca use um mesmo **KafkaConsumer** em multiplas _threads_, caso seja necessário crie um **KafkaConsumer** por _thread_. A explicação é porque o consumo é feito por partição e é sequencial. Se houver o compartilhamento de um mesmo **KafkaConsumer** por várias _threads_ registros de uma mesma partição vão ser processados asincronamente, o que pode acarretar em perda de dados ou reprocessamento. Se for criado mais de um **KafkaConsumer** cada um estará escutando uma partição especifica, o que resultará no processamento sequencial da partição sincronamente.
+
+#### 3.3.4.4 Definindo o nível de isolamento
+                                                                                      
+Lembra que falamos que é possível implementar transações usando o [**KafkaProducer**](https://kafka.apache.org/34/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html)? 
+
+Quando fazemos isso precisamos também definir o tipo de isolamento que nosso consumer terá e isso é feito através da configuração `isolation.level`.
+
+O valor padrão de `isolation.level` é `read_uncommitted` o que implica que assim que uma mensagem é publica pelo produtor ela será lida pelo consumidor, inclusive mensagens de transações abortadas. Se desejamos ler apenas mensagens em que estão em transações finalizadas com sucesso precisamos mudar esse valor para `read_committed`.
+
+![Descrevendo o grau de isolamento](./imagens/isolation-level.png)
+
+Fonte: https://excalidraw.com/#json=HvHzhacD2wGzeHGlztO6R,0PUFq21veX_GNr5nhLxd3A
 
 [Voltar](./02-criando-um-produtor.md)
