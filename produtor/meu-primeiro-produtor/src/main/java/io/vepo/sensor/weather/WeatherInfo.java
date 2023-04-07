@@ -1,5 +1,7 @@
 package io.vepo.sensor.weather;
 
+import java.util.Objects;
+
 public class WeatherInfo {
     private final Geolocation location;
     private final double temperature;
@@ -30,6 +32,27 @@ public class WeatherInfo {
 
     public double getWind() {
         return wind;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(location, temperature, wind, timestamp);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this){
+            return true;
+        } else 
+        if (!(obj instanceof WeatherInfo)){
+            return false;
+        } else {
+            WeatherInfo other = (WeatherInfo) obj;
+            return Objects.equals(location, other.location) &&
+                   temperature == other.temperature&&
+                   wind == other.wind &&
+                   timestamp == other.timestamp;
+        }
     }
 
     @Override
