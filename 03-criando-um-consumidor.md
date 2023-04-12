@@ -11,7 +11,7 @@ mvn archetype:generate -DgroupId=io.vepo.kafka.imersao -DartifactId=meu-primeiro
 ```
 
 ```xml
-<dependency>4
+<dependency>
     <groupId>org.apache.kafka</groupId>
     <artifactId>kafka-clients</artifactId>
     <version>3.4.0</version>
@@ -94,7 +94,7 @@ java -jar target/meu-primeiro-consumidor-1.0-SNAPSHOT.jar
 
 Antes de implementar essa classe, vamos criar alguns pressupostos sobre como ela vai ser utilizada.
 
-1. Todo consumidor Kafka implementa um Loop de pull-process-commit
+1. Todo consumidor Kafka implementa um Loop de poll-process-commit
 2. Nossa classe irá consumir dados automaticamente, devemos apenas iniciar uma thread
 3. O consumidor irá fazer uma agregação em memória dos dados de temperatura calculando temperatura máxima e mínima e vento máximo e mínimo por dia.
 4. A classe já receberá o consumidor inicializado.
@@ -202,7 +202,7 @@ public class GeolocationDeserializer implements Deserializer<Geolocation> {
 
 O próximo passo é definir as configurações do Consumidor. Quando vamos inicializar qualquer cliente Kafka, ele pode receber como parâmetro um [**Properties**](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html) ou um **Map<String, Object>** com os valores que serão usados para configurar o consumidor e tudo relacionado a ele (deserializers, interceptors, etc...). Os valores aceitos como padrão estão na [documentação do site do Kafka](https://kafka.apache.org/documentation/#consumerconfigs), é uma leitura obrigatória. 
 
-![Documentação das configurações padrões do Producer com uma boneca e um homem palito](./imagens/consumer-configs.png)
+![Documentação das configurações padrões do Consumer com uma boneca e um homem palito](./imagens/consumer-configs.png)
 
 Fonte: https://excalidraw.com/#json=P4ZmiPhqVFdCSC2Vo27XV,kdl5j-Z1aBDH_u1L9H7jOg
 
@@ -406,7 +406,7 @@ Por fim fica uma última pergunta: _para agilizar, posso processar usando vária
 A resposta é SIM e NÃO! Nunca use um mesmo **KafkaConsumer** em multiplas _threads_, caso seja necessário crie um **KafkaConsumer** por _thread_. A explicação é porque o consumo é feito por partição e é sequencial. Se houver o compartilhamento de um mesmo **KafkaConsumer** por várias _threads_ registros de uma mesma partição vão ser processados asincronamente, o que pode acarretar em perda de dados ou reprocessamento. Se for criado mais de um **KafkaConsumer** cada um estará escutando uma partição especifica, o que resultará no processamento sequencial da partição sincronamente.
 
 #### 3.3.4.4 Definindo o nível de isolamento
-                                                                                      
+
 Lembra que falamos que é possível implementar transações usando o [**KafkaProducer**](https://kafka.apache.org/34/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html)? 
 
 Quando fazemos isso precisamos também definir o tipo de isolamento que nosso consumer terá e isso é feito através da configuração `isolation.level`.

@@ -1,6 +1,6 @@
 # 4. Como criar um tópicos
 
-[Voltar](./03-criando-um-consumidor.md)
+[Voltar](./03-criando-um-consumidor.md) [Próximo](./05-criando-um-stream.md)
 
 Já estamos usando o nosso Broker Kafka mas não criamos nenhum tópico. Isso só é possível porque na configuração do broker o valor de `auto.create.topics.enable` é `true`, caso fosse `false` não teria sido possível publica e consumir mensagens.
 
@@ -334,4 +334,4 @@ Se você já usou um Kafka em produção e não se atentou para politica de limp
 
 Um segmento é elegível para a politica de limpeza se ele tem idade maior que `retention.ms` ou a partição tem tamanho maior que `retention.bytes` e ele não é mais o segmento ativo. As politica de limpeza existente são `delete` `compact`. Em `delete` qualquer segmento elegível é deletado e as mensagens não estarão mais disponíveis para novos consumidores. Em `compact` apenas a última mensagem de cada chave estará disponível. É possível também criar uma politica mista em que segmentos elegíveis são removidos, mas segmentos não ativos são compactados.
 
-[Voltar](./03-criando-um-consumidor.md)
+[Voltar](./03-criando-um-consumidor.md) [Próximo](./05-criando-um-stream.md)
