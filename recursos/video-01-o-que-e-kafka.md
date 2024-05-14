@@ -2,7 +2,7 @@
 
 ## O que é o Apache Kafka?
 
-Apache Kafka é uma plafatorma de Streaming de eventos distribuídos.
+Apache Kafka é uma plataforma de Streaming de eventos distribuídos.
 
 Ela é composta por:
 
