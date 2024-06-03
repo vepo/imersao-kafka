@@ -59,9 +59,13 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-0:9093,2@kafka-1:9095,3@kafka-2:9097
 ``` 
 
-/etc/hosts
+#### Configurar hosts
+**Importante**: É preciso configurar o arquivos hosts para uma aplicação acessar o broker dentro de um container docker.
 
-127.0.0.1 kafka-0 kafka-1 kafka-2
+* Linux:   `/etc/hosts`
+* Windows: `C:\Windows\System32\Drivers\etc\hosts`
+
+> 127.0.0.1 kafka-0 kafka-1 kafka-2
 
 ## Como é uma mensagem Kafka?
 
@@ -121,7 +125,7 @@ Properties configs = new Properties();
 configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, GeolocationSerializer.class);
 configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, WeatherInfoSerializer.class);
-try(Producer<Chave, Mensagem> producer = new KafkaProducer(configs)) {
+try(Producer<Chave, Mensagem> producer = new KafkaProducer<>(configs)) {
   Mensagem mensagem = /*   */
   Future<RecordMetadata> talvezMetadados = producer.send(new ProducerRecord<String, String>("topico", mensagem.getChave(), mensagem));
   producer.flush()
@@ -134,7 +138,7 @@ Properties configs = new Properties();
 configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, GeolocationSerializer.class);
 configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, WeatherInfoSerializer.class);
-try(Producer<Chave, Mensagem> producer = new KafkaProducer(configs)) {
+try(Producer<Chave, Mensagem> producer = new KafkaProducer<>(configs)) {
   Mensagem mensagem = /*   */
   producer.send(new ProducerRecord<String, String>("topico", mensagem.getChave(), mensagem),
                (metadados, exception) -> {
@@ -146,5 +150,6 @@ try(Producer<Chave, Mensagem> producer = new KafkaProducer(configs)) {
 ### Testando sua classe produtora
 
 1. Use Testcontainers
+  - https://java.testcontainers.org/modules/kafka/
 2. Use MockProducer
   - https://kafka.apache.org/34/javadoc/org/apache/kafka/clients/producer/MockProducer.html
