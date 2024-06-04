@@ -8,7 +8,7 @@
     - Caso você apague o tópico, reinicialize seu consumer
 * Mensagens sejam enviadas ao tópico
 
-## Responsabilidades
+## Responsabilidades do Consumer
 - Deserializar
 - Definir partições a serem consumidas
 - Balanceamento de carga
@@ -25,7 +25,7 @@ Similar ao Kafka Producer, mas usando Deserializer e não serializer
         - group.id
         - auto.offset.reset
 
-### Consumer Simples (_at-least-one_)
+### Consumer Simples (_at-least-once_)
 ```java
 Properties configs = new Properties();
 configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -35,6 +35,7 @@ configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, WeatherInfodDeserial
 configs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); // earliest, latest ou none 
                                                                   // none throw exception to the consumer if no previous offset is found for the consumer's group
 AtomicBoolean runing = new AtomicBoolean(true);
+CountDownLatch latch = new CountDownLatch(1);
 Runtime.getRuntime()
        .addShutdownHook(new Thread() {
            @Override
@@ -53,8 +54,8 @@ try(Consumer<Chave, Mensagem> consumer = new KafkaConsumer<>(configs)) {
         ConsumerRecords<Chave, Mensagem> records = consumer.poll(Duration.ofMillis(1000));
         records.forEach(this::consume);
     }
-    latch.countDown();
 }
+latch.countDown();
 ```
 * A primeira mensagem que o consumer irá consumir será definida por `auto.offset.reset` que será usado somente na primeira execução
 * Cada chamada do método `poll` não poderá exceder [`session.timeout.ms`](https://kafka.apache.org/documentation/#consumerconfigs_session.timeout.ms)
@@ -63,7 +64,7 @@ try(Consumer<Chave, Mensagem> consumer = new KafkaConsumer<>(configs)) {
 * Caso o consumo das mensagens demore muito, esse KafkaConsumer será descartado do cluster que executará uma operação de Rebalancing
 * Irá consumir qualquer mensagem enviada, mesmo as mensagens enviadas por transações não finalizadas. Ver propriedade [`isolation.level`](https://kafka.apache.org/documentation/
 #consumerconfigs_isolation.level)
-* Modo de operação padrão _at-least-one_
+* Modo de operação padrão _at-least-once_
 
 ### Consumer _Exactly-Once_
 
@@ -105,10 +106,15 @@ try(Consumer<Chave, Mensagem> consumer = new KafkaConsumer<>(configs)) {
         }
     }
 }
+latch.countDown();
 ```
 
 ## Operação de Rebalancing
 
+* Triggers
+    - Novo consumer iniciado
+    - Consumer finalizado
+    - Consumer com timeout de sessão
 * Executa balanceamento de carga entre os consumers
 * Distribuição das partições entre os brokers
 * Pode haver perda de dados
@@ -117,12 +123,18 @@ try(Consumer<Chave, Mensagem> consumer = new KafkaConsumer<>(configs)) {
 
 ```
               t0                                 t2
-C1      --------------------------------------------------------------
+C1      ---------------------(poll)----------------------------------->
                | (heartbeat)                     | (heartbeat)
-C2      --------------------------------------------------------------
+C2      ------------------------------(poll)-------------------------->
                |                                 |
-C3      --------------------------------------------------------------
+C3      -------------------------------------------------------------->
                |                                 |
                v                                 v
-Broker  --------------------------------------------------------------
+Broker  -------------------------------------------------------------->
 ```
+
+## Modelo de Threads
+
+* Consumer vai consumir por partição
+* Mensagens com a mesma chave são salvas na mesma partição
+* Use um KafkaConsumer por Thread para facilitar os commits
