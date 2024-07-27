@@ -1,0 +1,41 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: my-topic-monthly
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  partitions: 10
+  replicas: 2
+  config: 
+    cleanup.policy: compact,delete
+    compression.type: gzip
+    retention.ms: 2592000000 ## 30 dias
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: my-topic-weekly
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  partitions: 100
+  replicas: 2
+  config: 
+    cleanup.policy: compact,delete
+    compression.type: gzip
+    retention.ms: 604800000 ## 7 dias
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: my-topic-daily
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  partitions: 150
+  replicas: 2
+  config: 
+    cleanup.policy: compact,delete
+    compression.type: gzip
+    retention.ms: 86400000 ## 1 dia
