@@ -49,7 +49,7 @@ Ver: https://strimzi.io/
 * kubectl
 
 ### Passos
-1. Criar cluster usando mini
+1. Criar cluster usando minikube
    ```bash
    minikube start --memory=4096
    ```
