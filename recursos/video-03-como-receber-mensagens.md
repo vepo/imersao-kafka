@@ -49,7 +49,7 @@ Runtime.getRuntime()
            }
        });
 try(Consumer<Chave, Mensagem> consumer = new KafkaConsumer<>(configs)) {
-    consumer.assign(Arrays.asList("meu-topic"));
+    consumer.subscribe(Arrays.asList("meu-topic"));
     while(running.get()) {
         ConsumerRecords<Chave, Mensagem> records = consumer.poll(Duration.ofMillis(1000));
         records.forEach(this::consume);
@@ -91,7 +91,7 @@ Runtime.getRuntime()
            }
        });
 try(Consumer<Chave, Mensagem> consumer = new KafkaConsumer<>(configs)) {
-    consumer.assign(Arrays.asList("meu-topic"));
+    consumer.subscribe(Arrays.asList("meu-topic"));
     while(running.get()) {
         ConsumerRecords<Chave, Mensagem> records = consumer.poll(Duration.ofMillis(1000));
         for (TopicPartition partition : records.partitions()) {
