@@ -27,3 +27,7 @@ Para instalar o Java e o Maven, recomendo usar o [SDKMan!](https://sdkman.io/ins
 4. [Como criar um tópicos](./04-criando-um-topico.md)
 5. [Como criar um Stream](./05-criando-um-stream.md)
 6. [Como configurar um Cluster Kafka](./06-criando-um-cluster.md)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=vepo/imersao-kafka&type=date&legend=top-left)](https://www.star-history.com/#vepo/imersao-kafka&type=date&legend=top-left)
